@@ -1,6 +1,8 @@
 library(readr)
 library(tidyverse)
 library(dplyr)
+library(tidyr)
+
 googleplaystore <- read_csv("google-play-store-apps/googleplaystore.csv")
 #user.reviews <- read_csv("google-play-store-apps/googleplaystore_user_reviews.csv")
 
@@ -60,3 +62,31 @@ head(data$Price)
 data = data %>% mutate(Price = gsub("\\$","", Price)) %>% 
   mutate(Price = as.numeric(as.character(Price)))
 class(data$Price)
+
+saveRDS(data, file = "Data_clean.rds")
+
+data1 = readRDS("Data_clean.rds")
+
+#### Data preparation users dataset ####
+
+data=read.csv("google-play-store-apps/googleplaystore_user_reviews.csv")
+
+# elimino la segunda columna
+# quito las filas con NA
+
+data2=data %>%
+  drop_na() %>%
+  #group_by(Sentiment)%>%
+  select(-Translated_Review,-Sentiment_Polarity,-Sentiment_Subjectivity)
+#columnas guya para agrupar por appsssss
+valor = data2 %>% group_by(App)%>%mutate(countpos = sum(Sentiment=='Positive')) %>%
+  mutate(countneut = sum(Sentiment=='Neutral')) %>% 
+  mutate(counteg = sum(Sentiment=='Negative'))%>%select(-Sentiment)
+
+valor2= valor[!duplicated(valor),]
+tablefinal=valor2[-2,]
+
+
+#Left join of the two datasets
+
+data = left_join(data1, tablefinal)
