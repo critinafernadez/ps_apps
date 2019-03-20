@@ -21,3 +21,4 @@ valor2= valor[!duplicated(valor),]
 tablefinal=valor2[-2,]
 
 
+
