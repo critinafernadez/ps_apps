@@ -1,9 +1,9 @@
+library("tidyverse")
+library(tidyr)
 data=read.csv("googleplaystore_user_reviews.csv")
 (head(data))
 class(data)
 (summary(data$App))
-class(tab)
-head(tab)
 
 # elimino la segunda columna
 # quito las filas con NA
@@ -19,3 +19,5 @@ valor = data2 %>% group_by(App)%>%mutate(countpos = sum(Sentiment=='Positive')) 
 
 valor2= valor[!duplicated(valor),]
 tablefinal=valor2[-2,]
+
+
